@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  EDUBIME EDUCATIONAL PORTAL — index.html  (v2: App-style Tab Navigation)
+  ============================================================================
+  ORGANIZATION : EDUBIME (এজুবিইমি)
+  ARCHITECTURE : 4-File Modular Setup
+                 - index.html   (THIS FILE — structure/markup only)
+                 - style.css    (all visual styling — to be regenerated to
+                                  match this new tab layout + a fresh,
+                                  educational-friendly color palette)
+                 - app.js       (tab switching, language switch, modal logic)
+                 - auth-db.js   (Firebase config, auth, Firestore calls)
+
+  WHAT CHANGED FROM v1:
+  - Replaced the long scrolling one-page layout with an APP-LIKE VIEW
+    SYSTEM. Only one <section class="app-view"> is visible at a time:
+        #view-home, #view-parent, #view-admission,
+        #view-teacher, #view-owner
+    app.js will toggle the `hidden` attribute on these sections (and the
+    `is-active` class + aria-selected on the matching tab button) — this
+    file only defines the structure and default active view (Home).
+  - Added #app-tab-nav: a single nav element containing the 5 tab
+    buttons. style.css should position this as a BOTTOM bar on mobile
+    and a TOP bar on desktop (a single markup block, positioned two
+    different ways per breakpoint — do not duplicate the buttons).
+  - Text content has been rewritten to be short, direct, and free of
+    filler/clutter for both languages ("no hibijibi" text). Visual
+    weight (bold labels, friendly non-black text color, brand accent
+    color) is style.css's job in the next pass — this file just carries
+    clean copy via data-en/data-bn.
+
+  HOW TO EXTEND THIS FILE:
+  - Do NOT inline any CSS or JS logic here. Structure only.
+  - Every interactive element that needs JS must carry a stable `id`
+    attribute — app.js and auth-db.js bind to these ids. Do not rename
+    existing ids without updating both JS files.
+  - Bilingual text: every user-facing text node carries BOTH
+    data-en="..." and data-bn="..." attributes. app.js reads the active
+    language and swaps element.textContent accordingly. The visible
+    text inside the tag is the ENGLISH default (fallback before JS runs).
+  - DATA ISOLATION RULE: ids are prefixed by role so Owner / Teacher /
+    Parent / Public logic can never accidentally cross-read each other's
+    DOM nodes or Firebase paths:
+        owner-*      -> Owner Portal only
+        teacher-*    -> Teacher Portal only
+        parent-*     -> Parent Portal only
+        public-*     -> visible to everyone, editable by Owner only
+        admission-*  -> Admission form only (writes to Owner Inbox)
+  - Firebase security rules (in auth-db.js / Firebase console) MUST
+    mirror this same prefix separation for database paths, e.g.
+    /notices/{noticeId}, /teachers/{teacherId}/classes, /students/{code}.
+  ============================================================================
+-->
+<html lang="en" id="html-root">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>EDUBIME | এজুবিইমি — Educational Portal</title>
+  <meta name="description" content="EDUBIME — A free, bilingual (Bangla/English) educational portal for students, parents, teachers and owners." />
+
+  <!-- Theme color for mobile browser chrome — keep in sync with style.css's
+       primary brand variable once the new palette is defined there. -->
+  <meta name="theme-color" content="#1B2A4A" />
+
+  <!-- ---- Font imports: Hind Siliguri (Bangla) + Poppins (English) ---- -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- ---- Stylesheet (external file — style.css, generated separately) ---- -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Favicon placeholder -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%231B2A4A%22/><text x=%2250%22 y=%2266%22 font-size=%2250%22 fill=%22%232ECC71%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22800%22>E</text></svg>" />
+</head>
+
+<body id="body-root">
+
+  <!-- Accessibility: keyboard users can jump straight to the active view -->
+  <a href="#main-content" class="skip-link" data-en="Skip to main content" data-bn="মূল কনটেন্টে যান">Skip to main content</a>
+
+  <!-- ==========================================================================
+       SECTION: HEADER
+       Purpose: brand identity (animated SVG logo) + language toggle only.
+       Primary navigation now lives in #app-tab-nav, not here.
+  ========================================================================== -->
+  <header id="site-header" class="site-header">
+    <div class="header-inner">
+
+      <!-- ---------------- Brand / Animated Logo ---------------- -->
+      <a href="#main-content" id="brand-logo-link" class="brand-logo-link" aria-label="EDUBIME Home">
+        <svg id="edubime-logo" class="edubime-logo" width="42" height="42" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="EDUBIME logo">
+          <rect x="10" y="10" width="80" height="80" rx="18" fill="#1B2A4A"/>
+          <path class="logo-book" d="M25 65 L25 35 Q35 28 50 35 Q65 28 75 35 L75 65 Q65 58 50 65 Q35 58 25 65 Z" fill="#F8F9FA" opacity="0.95"/>
+          <line x1="50" y1="35" x2="50" y2="65" stroke="#1B2A4A" stroke-width="2"/>
+          <circle class="logo-orbit" cx="50" cy="18" r="4" fill="#2ECC71"/>
+        </svg>
+        <span class="brand-text">
+          <span class="brand-name">EDUBIME</span>
+          <span class="brand-name-bn" lang="bn">এজুবিইমি</span>
+        </span>
+      </a>
+
+      <!-- ---------------- Language Toggle (BN | EN) ---------------- -->
+      <button id="lang-toggle-btn" class="lang-toggle-btn" type="button"
+              aria-label="Switch language between Bangla and English"
+              data-current-lang="en">
+        <span id="lang-toggle-bn" class="lang-option" data-lang-option="bn">BN</span>
+        <span class="lang-divider" aria-hidden="true">|</span>
+        <span id="lang-toggle-en" class="lang-option is-active" data-lang-option="en">EN</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       APP TAB NAVIGATION (single markup block)
+       Purpose: the ONE navigation system for the whole app. style.css
+       renders this fixed to the BOTTOM of the screen on mobile (app-like)
+       and as a TOP bar on desktop — same 5 buttons, two different
+       positions, no duplicated markup.
+       Modification rule: each button's id is read by app.js to (a) show
+       the matching #view-* section and (b) toggle is-active/aria-selected
+       on all five buttons together.
+  ========================================================================== -->
+  <nav id="app-tab-nav" class="app-tab-nav" role="tablist" aria-label="Main sections">
+    <button id="nav-home" class="app-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="view-home">
+      <span class="app-tab-label" data-en="Home" data-bn="হোম">Home</span>
+    </button>
+    <button id="nav-parent" class="app-tab" type="button" role="tab" aria-selected="false" aria-controls="view-parent">
+      <span class="app-tab-label" data-en="Parent" data-bn="অভিভাবক">Parent</span>
+    </button>
+    <button id="nav-admission" class="app-tab" type="button" role="tab" aria-selected="false" aria-controls="view-admission">
+      <span class="app-tab-label" data-en="Admission" data-bn="ভর্তি">Admission</span>
+    </button>
+    <button id="nav-teacher" class="app-tab" type="button" role="tab" aria-selected="false" aria-controls="view-teacher">
+      <span class="app-tab-label" data-en="Teacher" data-bn="শিক্ষক">Teacher</span>
+    </button>
+    <button id="nav-owner" class="app-tab" type="button" role="tab" aria-selected="false" aria-controls="view-owner">
+      <span class="app-tab-label" data-en="Owner" data-bn="মালিক">Owner</span>
+    </button>
+  </nav>
+
+  <!-- ==========================================================================
+       MAIN CONTENT — one <main>, five view sections. Only #view-home ships
+       visible by default; app.js hides/shows the rest via [hidden].
+  ========================================================================== -->
+  <main id="main-content">
+
+    <!-- ======================================================================
+         VIEW 1: HOME  (#view-home — default active view)
+    ====================================================================== -->
+    <section id="view-home" class="app-view" role="tabpanel" aria-labelledby="nav-home">
+
+      <div class="view-intro">
+        <h1 class="view-title" data-en="Welcome to EDUBIME" data-bn="এজুবিইমি-তে স্বাগতম">Welcome to EDUBIME</h1>
+        <p class="view-subtitle" data-en="Notices, student highlights, and class schedules — all in one place." data-bn="নোটিশ, শিক্ষার্থীদের কৃতিত্ব ও ক্লাসের সময়সূচি — সব একসাথে।">Notices, student highlights, and class schedules — all in one place.</p>
+      </div>
+
+      <!-- ---- Public Notice Board (read-only; Owner edits from Owner tab) ---- -->
+      <section id="public-notice-board" class="content-block" aria-labelledby="public-notice-heading">
+        <h2 id="public-notice-heading" class="block-heading" data-en="Notice Board" data-bn="নোটিশ বোর্ড">Notice Board</h2>
+        <ul id="public-notice-list" class="notice-list" aria-live="polite">
+          <li class="notice-item notice-placeholder" data-placeholder="true">
+            <span class="notice-date">--/--/----</span>
+            <span class="notice-text" data-en="New notices will appear here." data-bn="নতুন নোটিশ এখানে দেখা যাবে।">New notices will appear here.</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- ---- Student Showcase ---- -->
+      <section id="public-student-showcase" class="content-block" aria-labelledby="public-showcase-heading">
+        <h2 id="public-showcase-heading" class="block-heading" data-en="Student Showcase" data-bn="শিক্ষার্থী শোকেস">Student Showcase</h2>
+        <div id="student-showcase-grid" class="showcase-grid">
+          <!-- app.js injects .showcase-card elements here -->
+        </div>
+        <template id="showcase-card-template">
+          <article class="showcase-card">
+            <img class="showcase-photo" src="" alt="" loading="lazy" />
+            <h3 class="showcase-name"></h3>
+            <p class="showcase-note"></p>
+          </article>
+        </template>
+      </section>
+
+      <!-- ---- Routine & Exam Schedule ---- -->
+      <section id="public-routine-schedule" class="content-block" aria-labelledby="public-routine-heading">
+        <h2 id="public-routine-heading" class="block-heading" data-en="Routine &amp; Exam Schedule" data-bn="রুটিন ও পরীক্ষার সময়সূচি">Routine & Exam Schedule</h2>
+
+        <div class="sub-tabs" role="tablist" aria-label="Routine and exam tabs">
+          <button id="routine-tab-class" class="sub-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="routine-panel-class"
+                  data-en="Class Routine" data-bn="ক্লাস রুটিন">Class Routine</button>
+          <button id="routine-tab-exam" class="sub-tab" type="button" role="tab" aria-selected="false" aria-controls="routine-panel-exam"
+                  data-en="Exam Schedule" data-bn="পরীক্ষার সময়সূচি">Exam Schedule</button>
+        </div>
+
+        <div id="routine-panel-class" class="sub-panel" role="tabpanel" aria-labelledby="routine-tab-class">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th data-en="Time" data-bn="সময়">Time</th>
+                <th data-en="Subject" data-bn="বিষয়">Subject</th>
+                <th data-en="Teacher" data-bn="শিক্ষক">Teacher</th>
+              </tr>
+            </thead>
+            <tbody id="public-class-routine-body"></tbody>
+          </table>
+        </div>
+
+        <div id="routine-panel-exam" class="sub-panel" role="tabpanel" aria-labelledby="routine-tab-exam" hidden>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th data-en="Date" data-bn="তারিখ">Date</th>
+                <th data-en="Subject" data-bn="বিষয়">Subject</th>
+                <th data-en="Class" data-bn="ক্লাস">Class</th>
+              </tr>
+            </thead>
+            <tbody id="public-exam-schedule-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 2: PARENT PORTAL  (#view-parent, id prefix: parent-*)
+         Mandatory anonymous weekly vote gates access to the search bar.
+         app.js opens #parent-voting-modal the first time this view is
+         shown in a session; it is dismissible only after a vote is cast.
+    ====================================================================== -->
+    <section id="view-parent" class="app-view" role="tabpanel" aria-labelledby="nav-parent" hidden>
+
+      <div class="view-intro">
+        <h1 class="view-title" data-en="Parent Portal" data-bn="অভিভাবক পোর্টাল">Parent Portal</h1>
+        <p class="view-subtitle" data-en="Look up your child's attendance, marks, and progress with their student code." data-bn="শিক্ষার্থী কোড দিয়ে আপনার সন্তানের উপস্থিতি, নম্বর ও অগ্রগতি দেখুন।">Look up your child's attendance, marks, and progress with their student code.</p>
+      </div>
+
+      <!-- ---- Student Code Search ---- -->
+      <div class="search-bar-row">
+        <label for="parent-search-input" class="visually-hidden" data-en="Student code" data-bn="শিক্ষার্থী কোড">Student code</label>
+        <input type="text" id="parent-search-input" name="studentCode" placeholder="EDU-2026-001" autocomplete="off" />
+        <button type="button" id="parent-search-btn" class="btn btn-primary" data-en="Search" data-bn="খুঁজুন">Search</button>
+      </div>
+
+      <p id="parent-search-status" class="form-status" role="status" aria-live="polite"></p>
+
+      <!-- ---- Result Dashboard (populated by app.js after a successful search) ---- -->
+      <div id="parent-result-card" class="parent-result-card" hidden>
+        <img id="parent-result-photo" class="parent-result-photo" src="" alt="" />
+        <h3 id="parent-result-name" class="parent-result-name"></h3>
+
+        <div class="stat-row">
+          <span data-en="Attendance" data-bn="উপস্থিতি">Attendance</span>
+          <span id="parent-result-attendance"></span>%
+        </div>
+
+        <div class="stat-row">
+          <span data-en="Exam Marks" data-bn="পরীক্ষার নম্বর">Exam Marks</span>
+          <span id="parent-result-marks"></span>
+        </div>
+
+        <div class="progress-bar-track" role="progressbar" id="parent-result-progress-track" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="progress-bar-fill" id="parent-result-progress-fill"></div>
+        </div>
+
+        <div class="advice-box">
+          <h4 data-en="Teacher's Advice" data-bn="শিক্ষকের পরামর্শ">Teacher's Advice</h4>
+          <p id="parent-result-advice-text"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         MODAL: PARENT WEEKLY VOTE  (parent-*)
+         Placed at the top level (not nested in #view-parent) so it can
+         overlay the whole screen with a fixed position, per the shared
+         modal pattern used across the app.
+    ====================================================================== -->
+    <div id="parent-voting-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="parent-voting-title" hidden>
+      <div class="modal-overlay"></div>
+      <div class="modal-panel">
+        <h2 id="parent-voting-title" data-en="This Week's Question" data-bn="এই সপ্তাহের প্রশ্ন">This Week's Question</h2>
+        <p class="modal-note" data-en="Your answer is anonymous. Please vote to continue to the search." data-bn="আপনার উত্তর বেনামী থাকবে। সার্চে যেতে অনুগ্রহ করে ভোট দিন।">Your answer is anonymous. Please vote to continue to the search.</p>
+
+        <form id="parent-weekly-vote-form" class="parent-weekly-vote-form">
+          <p id="parent-vote-question" class="vote-question-text" data-en="How satisfied are you with this week's classes?" data-bn="এই সপ্তাহের ক্লাসে আপনি কতটা সন্তুষ্ট?">How satisfied are you with this week's classes?</p>
+
+          <div class="vote-options" id="parent-vote-options" role="radiogroup" aria-labelledby="parent-vote-question">
+            <label><input type="radio" name="weeklyVote" value="very-satisfied" required />
+              <span data-en="Very Satisfied" data-bn="অত্যন্ত সন্তুষ্ট">Very Satisfied</span></label>
+            <label><input type="radio" name="weeklyVote" value="satisfied" />
+              <span data-en="Satisfied" data-bn="সন্তুষ্ট">Satisfied</span></label>
+            <label><input type="radio" name="weeklyVote" value="neutral" />
+              <span data-en="Neutral" data-bn="নিরপেক্ষ">Neutral</span></label>
+            <label><input type="radio" name="weeklyVote" value="unsatisfied" />
+              <span data-en="Unsatisfied" data-bn="অসন্তুষ্ট">Unsatisfied</span></label>
+          </div>
+
+          <p id="parent-vote-status" class="form-status" role="status" aria-live="polite"></p>
+
+          <button type="submit" id="parent-vote-submit-btn" class="btn btn-primary btn-full"
+                  data-en="Submit Vote" data-bn="ভোট জমা দিন">Submit Vote</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         VIEW 3: ADMISSION FORM  (#view-admission, id prefix: admission-*)
+         Submissions go ONLY to the Owner Inbox — never to teacher-* paths.
+    ====================================================================== -->
+    <section id="view-admission" class="app-view" role="tabpanel" aria-labelledby="nav-admission" hidden>
+
+      <div class="view-intro">
+        <h1 class="view-title" data-en="Admission Form" data-bn="ভর্তি ফরম">Admission Form</h1>
+        <p class="view-subtitle" data-en="Fill this out once — your application goes straight to the EDUBIME office." data-bn="একবার পূরণ করুন — আপনার আবেদন সরাসরি এজুবিইমি অফিসে যাবে।">Fill this out once — your application goes straight to the EDUBIME office.</p>
+      </div>
+
+      <form id="admission-form" class="admission-form" novalidate>
+        <div class="form-row">
+          <label for="admission-student-name" data-en="Student Name" data-bn="শিক্ষার্থীর নাম">Student Name</label>
+          <input type="text" id="admission-student-name" name="studentName" required autocomplete="name" />
+        </div>
+
+        <div class="form-row">
+          <label for="admission-class" data-en="Class" data-bn="শ্রেণি">Class</label>
+          <input type="text" id="admission-class" name="studentClass" required />
+        </div>
+
+        <div class="form-row">
+          <label for="admission-roll-target" data-en="Roll / Target" data-bn="রোল / টার্গেট">Roll / Target</label>
+          <input type="text" id="admission-roll-target" name="rollTarget" />
+        </div>
+
+        <div class="form-row">
+          <label for="admission-subjects" data-en="Preferred Subjects" data-bn="পছন্দের বিষয়সমূহ">Preferred Subjects</label>
+          <input type="text" id="admission-subjects" name="preferredSubjects" />
+        </div>
+
+        <div class="form-row">
+          <label for="admission-parent-name" data-en="Parent Name" data-bn="অভিভাবকের নাম">Parent Name</label>
+          <input type="text" id="admission-parent-name" name="parentName" required autocomplete="name" />
+        </div>
+
+        <div class="form-row">
+          <label for="admission-mobile" data-en="Mobile Number" data-bn="মোবাইল নম্বর">Mobile Number</label>
+          <input type="tel" id="admission-mobile" name="mobile" required autocomplete="tel" />
+        </div>
+
+        <div class="form-row">
+          <label for="admission-address" data-en="Address" data-bn="ঠিকানা">Address</label>
+          <textarea id="admission-address" name="address" rows="2" autocomplete="street-address"></textarea>
+        </div>
+
+        <div class="form-row">
+          <label for="admission-occupation" data-en="Parent's Occupation" data-bn="অভিভাবকের পেশা">Parent's Occupation</label>
+          <input type="text" id="admission-occupation" name="occupation" />
+        </div>
+
+        <div class="form-row">
+          <label for="admission-free-time" data-en="Free Time for Classes" data-bn="ক্লাসের জন্য মুক্ত সময়">Free Time for Classes</label>
+          <input type="text" id="admission-free-time" name="freeTime" placeholder="5 PM – 7 PM" />
+        </div>
+
+        <div class="form-row">
+          <label for="admission-preferred-teacher" data-en="Preferred Teacher" data-bn="পছন্দের শিক্ষক">Preferred Teacher</label>
+          <input type="text" id="admission-preferred-teacher" name="preferredTeacher" />
+        </div>
+
+        <p id="admission-form-status" class="form-status" role="status" aria-live="polite"></p>
+
+        <button type="submit" id="admission-submit-btn" class="btn btn-primary btn-full"
+                data-en="Submit Application" data-bn="আবেদন জমা দিন">Submit Application</button>
+      </form>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 4: TEACHER PORTAL  (#view-teacher, id prefix: teacher-*)
+    ====================================================================== -->
+    <section id="view-teacher" class="app-view" role="tabpanel" aria-labelledby="nav-teacher" hidden>
+
+      <div class="view-intro">
+        <h1 class="view-title" data-en="Teacher Portal" data-bn="শিক্ষক পোর্টাল">Teacher Portal</h1>
+        <p class="view-subtitle" data-en="Log in to mark attendance and leave advice for your own classes only." data-bn="শুধুমাত্র আপনার ক্লাসের উপস্থিতি ও পরামর্শ দিতে লগইন করুন।">Log in to mark attendance and leave advice for your own classes only.</p>
+      </div>
+
+      <!-- ---- Login ---- -->
+      <section id="teacher-login-section" class="content-block">
+        <form id="teacher-login-form" class="stacked-form">
+          <div class="form-row">
+            <label for="teacher-code" data-en="Teacher Code" data-bn="শিক্ষক কোড">Teacher Code</label>
+            <input type="text" id="teacher-code" name="teacherCode" required autocomplete="username" />
+          </div>
+          <div class="form-row">
+            <label for="teacher-password" data-en="Password" data-bn="পাসওয়ার্ড">Password</label>
+            <input type="password" id="teacher-password" name="teacherPassword" required autocomplete="current-password" />
+          </div>
+          <p id="teacher-login-status" class="form-status" role="status" aria-live="polite"></p>
+          <button type="submit" id="teacher-login-btn" class="btn btn-primary btn-full"
+                  data-en="Log In" data-bn="লগইন করুন">Log In</button>
+        </form>
+      </section>
+
+      <!-- ---- Dashboard (shown after successful login) ---- -->
+      <section id="teacher-dashboard-section" class="content-block" hidden>
+        <div class="dashboard-header">
+          <p data-en="Logged in as:" data-bn="লগইনকৃত:">Logged in as:</p>
+          <span id="teacher-dashboard-name"></span>
+          <button type="button" id="teacher-logout-btn" class="btn btn-tertiary" data-en="Log Out" data-bn="লগ আউট">Log Out</button>
+        </div>
+
+        <label for="teacher-class-select" data-en="Assigned Class" data-bn="নির্ধারিত ক্লাস">Assigned Class</label>
+        <select id="teacher-class-select" class="select-input">
+          <!-- app.js fills options ONLY from this teacher's assigned classes -->
+        </select>
+
+        <ul id="teacher-student-list" class="student-list">
+          <!-- app.js injects rows here -->
+        </ul>
+
+        <template id="teacher-student-row-template">
+          <li class="student-row">
+            <img class="student-row-photo" src="" alt="" />
+            <span class="student-row-name"></span>
+
+            <div class="attendance-toggle-group" role="group" aria-label="Attendance">
+              <button type="button" class="attendance-toggle-btn" data-status="present"
+                      data-en="Present" data-bn="উপস্থিত">Present</button>
+              <button type="button" class="attendance-toggle-btn" data-status="attentive"
+                      data-en="Attentive" data-bn="মনোযোগী">Attentive</button>
+            </div>
+
+            <label class="student-row-advice-label" data-en="Advice" data-bn="পরামর্শ">Advice</label>
+            <textarea class="student-row-advice-input" rows="2"></textarea>
+            <button type="button" class="btn btn-secondary student-row-save-btn"
+                    data-en="Save" data-bn="সংরক্ষণ করুন">Save</button>
+          </li>
+        </template>
+      </section>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 5: OWNER PORTAL  (#view-owner, id prefix: owner-*)
+         The ONLY portal allowed to write to public notices and class
+         assignments. Teacher/Parent views never expose these writes.
+    ====================================================================== -->
+    <section id="view-owner" class="app-view" role="tabpanel" aria-labelledby="nav-owner" hidden>
+
+      <div class="view-intro">
+        <h1 class="view-title" data-en="Owner Portal" data-bn="মালিক পোর্টাল">Owner Portal</h1>
+        <p class="view-subtitle" data-en="Manage notices, class assignments, admissions, and vote results." data-bn="নোটিশ, ক্লাস অ্যাসাইনমেন্ট, ভর্তি ও ভোটের ফলাফল পরিচালনা করুন।">Manage notices, class assignments, admissions, and vote results.</p>
+      </div>
+
+      <!-- ---- Passcode Gate ---- -->
+      <section id="owner-login-section" class="content-block">
+        <form id="owner-passcode-form" class="stacked-form">
+          <div class="form-row">
+            <label for="owner-passcode-input" data-en="Secret Passcode" data-bn="সিক্রেট পাসকোড">Secret Passcode</label>
+            <input type="password" id="owner-passcode-input" name="ownerPasscode" required autocomplete="current-password" />
+          </div>
+          <p id="owner-passcode-status" class="form-status" role="status" aria-live="polite"></p>
+          <button type="submit" id="owner-passcode-btn" class="btn btn-primary btn-full"
+                  data-en="Unlock" data-bn="আনলক করুন">Unlock</button>
+        </form>
+      </section>
+
+      <!-- ---- Dashboard (shown after correct passcode) ---- -->
+      <section id="owner-dashboard-section" class="content-block" hidden>
+
+        <div class="sub-tabs" role="tablist" aria-label="Owner dashboard sections">
+          <button class="sub-tab is-active" id="owner-tab-notices" type="button" role="tab" aria-selected="true" aria-controls="owner-notice-form-panel"
+                  data-en="Notices" data-bn="নোটিশ">Notices</button>
+          <button class="sub-tab" id="owner-tab-assignments" type="button" role="tab" aria-selected="false" aria-controls="owner-teacher-assign-form-panel"
+                  data-en="Assignments" data-bn="অ্যাসাইনমেন্ট">Assignments</button>
+          <button class="sub-tab" id="owner-tab-inbox" type="button" role="tab" aria-selected="false" aria-controls="owner-admission-inbox"
+                  data-en="Admissions" data-bn="ভর্তি">Admissions</button>
+          <button class="sub-tab" id="owner-tab-votes" type="button" role="tab" aria-selected="false" aria-controls="owner-voting-stats"
+                  data-en="Votes" data-bn="ভোট">Votes</button>
+        </div>
+
+        <!-- ---- Panel: Publish Public Notices ---- -->
+        <section id="owner-notice-form-panel" class="sub-panel" role="tabpanel" aria-labelledby="owner-tab-notices">
+          <form id="owner-notice-form" class="stacked-form">
+            <div class="form-row">
+              <label for="owner-notice-text-en" data-en="Notice (English)" data-bn="নোটিশ (ইংরেজি)">Notice (English)</label>
+              <textarea id="owner-notice-text-en" name="noticeTextEn" rows="2" required></textarea>
+            </div>
+            <div class="form-row">
+              <label for="owner-notice-text-bn" data-en="Notice (Bangla)" data-bn="নোটিশ (বাংলা)">Notice (Bangla)</label>
+              <textarea id="owner-notice-text-bn" name="noticeTextBn" rows="2" lang="bn"></textarea>
+            </div>
+            <button type="submit" id="owner-notice-publish-btn" class="btn btn-primary"
+                    data-en="Publish Notice" data-bn="নোটিশ প্রকাশ করুন">Publish Notice</button>
+          </form>
+          <ul id="owner-notice-manage-list" class="manage-list">
+            <!-- app.js injects editable notice rows here -->
+          </ul>
+        </section>
+
+        <!-- ---- Panel: Class Assignments to Teachers ---- -->
+        <section id="owner-teacher-assign-form-panel" class="sub-panel" role="tabpanel" aria-labelledby="owner-tab-assignments" hidden>
+          <form id="owner-teacher-assign-form" class="stacked-form">
+            <div class="form-row">
+              <label for="owner-assign-teacher-select" data-en="Select Teacher" data-bn="শিক্ষক নির্বাচন করুন">Select Teacher</label>
+              <select id="owner-assign-teacher-select" name="teacherId" class="select-input">
+                <!-- app.js fills with all teacher accounts -->
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="owner-assign-class-input" data-en="Class to Assign" data-bn="বরাদ্দকৃত ক্লাস">Class to Assign</label>
+              <input type="text" id="owner-assign-class-input" name="classToAssign" placeholder="Class 9 – Physics" />
+            </div>
+            <button type="submit" id="owner-assign-submit-btn" class="btn btn-primary"
+                    data-en="Assign Class" data-bn="ক্লাস বরাদ্দ করুন">Assign Class</button>
+          </form>
+          <ul id="owner-assignment-list" class="manage-list">
+            <!-- app.js injects teacher -> class(es) mapping here -->
+          </ul>
+        </section>
+
+        <!-- ---- Panel: Admission Inbox ---- -->
+        <section id="owner-admission-inbox" class="sub-panel" role="tabpanel" aria-labelledby="owner-tab-inbox" hidden>
+          <p class="section-note" data-en="Every admission submission lands here." data-bn="প্রতিটি ভর্তি আবেদন এখানে আসবে।">Every admission submission lands here.</p>
+          <ul id="owner-admission-inbox-list" class="manage-list">
+            <!-- app.js injects submissions here -->
+          </ul>
+        </section>
+
+        <!-- ---- Panel: Anonymous Vote Totals ---- -->
+        <section id="owner-voting-stats" class="sub-panel" role="tabpanel" aria-labelledby="owner-tab-votes" hidden>
+          <p class="section-note" data-en="Totals only — no voter is ever identifiable." data-bn="শুধুমাত্র মোট সংখ্যা — কোনো ভোটার শনাক্তযোগ্য নয়।">Totals only — no voter is ever identifiable.</p>
+          <div id="owner-vote-totals" class="vote-totals">
+            <!-- app.js injects aggregate counts per option here -->
+          </div>
+        </section>
+      </section>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       SCRIPTS
+       Load order matters: Firebase SDK -> auth-db.js (data layer) ->
+       app.js (tab/UI logic, depends on auth-db.js being ready).
+  ========================================================================== -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <script src="auth-db.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
