@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EDUBEMI — Student Portal</title>
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/student.css" />
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="app-header__brand">
+      <img src="../assets/logo.png" alt="EDUBEMI" class="app-header__logo" />
+      <span class="app-header__title">EDUBEMI</span>
+    </div>
+    <div class="app-header__actions">
+      <button class="app-header__icon-btn" data-nav="notifications">
+        <img src="../assets/icons/bell.svg" alt="Notifications" class="app-header__icon" />
+        <span class="badge" data-bind="notificationCount">3</span>
+      </button>
+      <button class="app-header__icon-btn" data-nav="settings">
+        <img src="../assets/icons/settings.svg" alt="Settings" class="app-header__icon" />
+      </button>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <main class="page-content">
+
+      <!-- STUDENT PROFILE CARD -->
+      <section class="section student-profile-card" data-bind="studentProfile">
+        <div class="student-profile-card__top">
+          <div class="student-profile-card__avatar-wrap">
+            <img src="../assets/avatars/default.png" alt="Student Avatar" class="student-profile-card__avatar" data-bind="studentPhotoUrl" />
+            <span class="student-profile-card__level-badge" data-bind="studentLevel">Lv. 4</span>
+          </div>
+          <div class="student-profile-card__info">
+            <h2 class="student-profile-card__name" data-bind="studentName">Rahim Uddin</h2>
+            <p class="student-profile-card__meta" data-bind="studentClass">Class 8 — Section A</p>
+            <p class="student-profile-card__id" data-bind="studentId">ID: EDU-2026-0143</p>
+          </div>
+          <button class="student-profile-card__edit-btn" data-nav="edit-profile">
+            <img src="../assets/icons/edit.svg" alt="Edit" class="student-profile-card__edit-icon" />
+          </button>
+        </div>
+      </section>
+
+      <!-- ATTENDANCE % -->
+      <section class="section">
+        <div class="section__header">
+          <h3 class="section__title">উপস্থিতির হার</h3>
+          <a class="section__link" data-nav="attendance-history">বিস্তারিত</a>
+        </div>
+        <div class="stat-card" data-bind="attendanceStats">
+          <div class="stat-card__ring-wrap">
+            <svg class="stat-card__ring" viewBox="0 0 100 100">
+              <circle class="stat-card__ring-bg" cx="50" cy="50" r="42"></circle>
+              <circle class="stat-card__ring-fg" cx="50" cy="50" r="42" data-bind="attendancePercentRing"></circle>
+            </svg>
+            <span class="stat-card__ring-value" data-bind="attendancePercent">92%</span>
+          </div>
+          <div class="stat-card__breakdown">
+            <div class="stat-card__breakdown-item">
+              <span class="stat-card__dot stat-card__dot--present"></span>
+              <span data-bind="presentDays">Present: 46 days</span>
+            </div>
+            <div class="stat-card__breakdown-item">
+              <span class="stat-card__dot stat-card__dot--absent"></span>
+              <span data-bind="absentDays">Absent: 4 days</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROGRESS METER -->
+      <section class="section">
+        <div class="section__header">
+          <h3 class="section__title">একাডেমিক অগ্রগতি</h3>
+          <a class="section__link" data-nav="progress-report">রিপোর্ট</a>
+        </div>
+        <div class="progress-list" data-bind="subjectProgressList">
+
+          <div class="progress-item" data-bind="subjectProgress[0]">
+            <div class="progress-item__top">
+              <span class="progress-item__label" data-bind="subjectName">গণিত</span>
+              <span class="progress-item__value" data-bind="subjectPercent">78%</span>
+            </div>
+            <div class="progress-item__bar-track">
+              <div class="progress-item__bar-fill" data-bind="subjectPercentBar" style="--fill-percent: 78%;"></div>
+            </div>
+          </div>
+
+          <div class="progress-item" data-bind="subjectProgress[1]">
+            <div class="progress-item__top">
+              <span class="progress-item__label" data-bind="subjectName">বিজ্ঞান</span>
+              <span class="progress-item__value" data-bind="subjectPercent">85%</span>
+            </div>
+            <div class="progress-item__bar-track">
+              <div class="progress-item__bar-fill" data-bind="subjectPercentBar" style="--fill-percent: 85%;"></div>
+            </div>
+          </div>
+
+          <div class="progress-item" data-bind="subjectProgress[2]">
+            <div class="progress-item__top">
+              <span class="progress-item__label" data-bind="subjectName">ইংরেজি</span>
+              <span class="progress-item__value" data-bind="subjectPercent">64%</span>
+            </div>
+            <div class="progress-item__bar-track">
+              <div class="progress-item__bar-fill" data-bind="subjectPercentBar" style="--fill-percent: 64%;"></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- GAMIFIED BADGES -->
+      <section class="section">
+        <div class="section__header">
+          <h3 class="section__title">অর্জিত ব্যাজ</h3>
+          <a class="section__link" data-nav="all-badges">সব দেখুন</a>
+        </div>
+        <div class="badge-grid" data-bind="studentBadges">
+
+          <div class="badge-item is-unlocked" data-bind="badge[0]" data-nav="badge-detail">
+            <div class="badge-item__icon-wrap">
+              <img src="../assets/badges/streak.svg" alt="Streak Badge" class="badge-item__icon" />
+            </div>
+            <span class="badge-item__label" data-bind="badgeName">৭ দিন স্ট্রিক</span>
+          </div>
+
+          <div class="badge-item is-unlocked" data-bind="badge[1]" data-nav="badge-detail">
+            <div class="badge-item__icon-wrap">
+              <img src="../assets/badges/quiz-master.svg" alt="Quiz Master Badge" class="badge-item__icon" />
+            </div>
+            <span class="badge-item__label" data-bind="badgeName">কুইজ মাস্টার</span>
+          </div>
+
+          <div class="badge-item is-locked" data-bind="badge[2]" data-nav="badge-detail">
+            <div class="badge-item__icon-wrap">
+              <img src="../assets/badges/perfect-attendance.svg" alt="Perfect Attendance Badge" class="badge-item__icon" />
+            </div>
+            <span class="badge-item__label" data-bind="badgeName">পারফেক্ট উপস্থিতি</span>
+          </div>
+
+          <div class="badge-item is-locked" data-bind="badge[3]" data-nav="badge-detail">
+            <div class="badge-item__icon-wrap">
+              <img src="../assets/badges/top-scorer.svg" alt="Top Scorer Badge" class="badge-item__icon" />
+            </div>
+            <span class="badge-item__label" data-bind="badgeName">টপ স্কোরার</span>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <nav class="bottom-nav">
+    <a class="bottom-nav__item is-active" data-nav="home">
+      <img src="../assets/icons/home.svg" alt="Home" class="bottom-nav__icon" />
+      <span class="bottom-nav__label">হোম</span>
+    </a>
+    <a class="bottom-nav__item" data-nav="courses">
+      <img src="../assets/icons/book.svg" alt="Courses" class="bottom-nav__icon" />
+      <span class="bottom-nav__label">কোর্স</span>
+    </a>
+    <a class="bottom-nav__item" data-nav="student-portal">
+      <img src="../assets/icons/user.svg" alt="Portal" class="bottom-nav__icon" />
+      <span class="bottom-nav__label">পোর্টাল</span>
+    </a>
+    <a class="bottom-nav__item" data-nav="messages">
+      <img src="../assets/icons/chat.svg" alt="Messages" class="bottom-nav__icon" />
+      <span class="bottom-nav__label">বার্তা</span>
+    </a>
+    <a class="bottom-nav__item" data-nav="profile">
+      <img src="../assets/icons/settings.svg" alt="Profile" class="bottom-nav__icon" />
+      <span class="bottom-nav__label">প্রোফাইল</span>
+    </a>
+  </nav>
+
+  <script src="../js/student-portal.js"></script>
+</body>
+          </html>
