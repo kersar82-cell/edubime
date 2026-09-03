@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EDUBEMI — Teacher Portal</title>
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/teacher.css" />
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="app-header__brand">
+      <img src="../assets/logo.png" alt="EDUBEMI" class="app-header__logo" />
+      <span class="app-header__title">EDUBEMI</span>
+    </div>
+    <div class="app-header__actions">
+      <button class="app-header__icon-btn" data-nav="notifications">
+        <img src="../assets/icons/bell.svg" alt="Notifications" class="app-header__icon" />
+        <span class="badge" data-bind="notificationCount">2</span>
+      </button>
+      <button class="app-header__icon-btn" data-nav="settings">
+        <img src="../assets/icons/settings.svg" alt="Settings" class="app-header__icon" />
+      </button>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <main class="page-content">
+
+      <!-- CLASS / SECTION SELECTOR -->
+      <section class="section" data-bind="classSelector">
+        <div class="section__header">
+          <h3 class="section__title">ক্লাস নির্বাচন করুন</h3>
+        </div>
+        <div class="selector-row">
+          <div class="select-field" data-bind="classDropdown" data-nav="select-class">
+            <label class="select-field__label">ক্লাস</label>
+            <select class="select-field__control" data-bind="classValue">
+              <option value="6">ক্লাস ৬</option>
+              <option value="7">ক্লাস ৭</option>
+              <option value="8" selected>ক্লাস ৮</option>
+              <option value="9">ক্লাস ৯</option>
+              <option value="10">ক্লাস ১০</option>
+            </select>
+            <img src="../assets/icons/chevron-down.svg" alt="" class="select-field__icon" />
+          </div>
+
+          <div class="select-field" data-bind="sectionDropdown" data-nav="select-section">
+            <label class="select-field__label">শাখা</label>
+            <select class="select-field__control" data-bind="sectionValue">
+              <option value="A" selected>শাখা A</option>
+              <option value="B">শাখা B</option>
+              <option value="C">শাখা C</option>
+            </select>
+            <img src="../assets/icons/chevron-down.svg" alt="" class="select-field__icon" />
+          </div>
+        </div>
+      </section>
+
+      <!-- DAILY ATTENDANCE TOGGLE LIST -->
+      <section class="section">
+        <div class="section__header">
+          <h3 class="section__title">দৈনিক উপস্থিতি</h3>
+          <span class="section__link" data-bind="attendanceDate">০৩ সেপ্টেম্বর, ২০২৬</span>
+        </div>
+        <div class="attendance-list" data-bind="studentAttendanceList">
+
+          <div class="attendance-row" data-bind="attendanceEntry[0]">
+            <div class="attendance-row__info">
+              <img src="../assets/avatars/default.png" alt="" class="attendance-row__avatar" data-bind="studentPhotoUrl" />
+              <span class="attendance-row__name" data-bind="studentName">রহিম উদ্দিন</span>
+            </div>
+            <label class="toggle-switch" data-bind="attendanceStatus[0]">
+              <input type="checkbox" class="toggle-switch__input" checked data-bind="isPresent" />
+              <span class="toggle-switch__track">
+                <span class="toggle-switch__thumb"></span>
+              </span>
+            </label>
+          </div>
+
+          <div class="attendance-row" data-bind="attendanceEntry[1]">
+            <div class="attendance-row__info">
+              <img src="../assets/avatars/default.png" alt="" class="attendance-row__avatar" data-bind="studentPhotoUrl" />
+              <span class="attendance-row__name" data-bind="studentName">করিম হাসান</span>
+            </div>
+            <label class="toggle-switch" data-bind="attendanceStatus[1]">
+              <input type="checkbox" class="toggle-switch__input" data-bind="isPresent" />
+              <span class="toggle-switch__track">
+                <span class="toggle-switch__thumb"></span>
+              </span>
+            </label>
+          </div>
+
+          <div class="attendance-row" data-bind="attendanceEntry[2]">
+            <div class="attendance-row__info">
+              <img src="../assets/avatars/default.png" alt="" class="attendance-row__avatar" data-bind="studentPhotoUrl" />
+              <span class="attendance-row__name" data-bind="studentName">ফাতেমা আক্তার</span>
+            </div>
+            <label class="toggle-switch" data-bind="attendanceStatus[2]">
+              <input type="checkbox" class="toggle-switch__input" checked data-bind="isPresent" />
+              <span class="toggle-switch__track">
+                <span class="toggle-switch__thumb"></span>
+              </span>
+            </label>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- LESSON PERFORMANCE SLIDER -->
+      <section class="section">
+        <div class="section__header">
+          <h3 class="section__title">পাঠ কর্মক্ষমতা মূল্যায়ন</h3>
+        </div>
+        <div class="performance-card" data-bind="lessonPerformance">
+          <div class="performance-card__top">
+            <span class="performance-card__label" data-bind="lessonTopic">অধ্যায় ৫: ভগ্নাংশ</span>
+            <span class="performance-card__value" data-bind="performancePercent">70%</span>
+          </div>
+          <input
+            type="range"
+            class="performance-card__slider"
+            min="0"
+            max="100"
+            value="70"
+            step="5"
+            data-bind="performanceSliderInput"
+          />
+          <div class="performance-card__scale">
+            <span>দুর্বল</span>
+            <span>মাঝারি</span>
+            <span>ভালো</span>
+            <span>চমৎকার</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- NOTES -->
+      <section class="section">
+        <div class="section__header">
+          <h3 class="section__title">মন্তব্য (ঐচ্ছিক)</h3>
+        </div>
+        <textarea
+          class="notes-field"
+          rows="4"
+          placeholder="ক্লাস সম্পর্কে মন্তব্য লিখুন..."
+          data-bind="teacherNotes"
+        ></textarea>
+      </section>
+
+      <!-- SUBMIT BUTTON -->
+      <section class="section section--submit">
+        <button class="btn-primary" data-nav="submit-attendance" data-bind="submitAttendanceBtn">
+          জমা দিন
+        </button>
+      </section>
+
+    </main>
+  </div>
+
+  <nav class="bottom-nav">
+    <a class="bottom-nav__item" data-nav="home">
+      <img src="../assets/icons/home.svg" alt="Home" class="bottom-nav__icon" />
+      <span class="bottom-nav__label">হোম</span>
+    </a>
+    <a class="bottom-nav__item" data-nav="courses">
+      <img src="../assets/icons/book.svg" alt="Courses" class="bottom-nav__icon" />
+      <span class="bottom-nav__label">কোর্স</span>
+    </a>
+    <a class="bottom-nav__item is-active" data-nav="teacher-portal">
+      <img src="../assets/icons/user.svg" alt="Portal" class="bottom-nav__icon" />
+      <span class="bottom-nav__label">পোর্টাল</span>
+    </a>
+    <a class="bottom-nav__item" data-nav="messages">
+      <img src="../assets/icons/chat.svg" alt="Messages" class="bottom-nav__icon" />
+      <span class="bottom-nav__label">বার্তা</span>
+    </a>
+    <a class="bottom-nav__item" data-nav="profile">
+      <img src="../assets/icons/settings.svg" alt="Profile" class="bottom-nav__icon" />
+      <span class="bottom-nav__label">প্রোফাইল</span>
+    </a>
+  </nav>
+
+  <script src="../js/teacher-portal.js"></script>
+</body>
+        </html>
