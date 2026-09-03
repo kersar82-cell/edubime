@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EDUBEMI — Home</title>
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/home.css" />
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="app-header__brand">
+      <img src="assets/logo.png" alt="EDUBEMI" class="app-header__logo" />
+      <span class="app-header__title">EDUBEMI</span>
+    </div>
+    <div class="app-header__actions">
+      <button class="app-header__icon-btn" data-nav="notifications">
+        <img src="assets/icons/bell.svg" alt="Notifications" class="app-header__icon" />
+        <span class="badge" data-bind="notificationCount">3</span>
+      </button>
+      <button class="app-header__icon-btn" data-nav="settings">
+        <img src="assets/icons/settings.svg" alt="Settings" class="app-header__icon" />
+      </button>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <main class="page-content">
+
+      <!-- HERO / WELCOME BANNER -->
+      <section class="section hero" data-bind="heroBanner">
+        <div class="hero__slider" data-bind="heroSlider">
+
+          <div class="hero__slide">
+            <img src="assets/banners/welcome.jpg" alt="Welcome Banner" class="hero__image" />
+            <div class="hero__overlay">
+              <h1 class="hero__title" data-bind="heroTitle">স্বাগতম, EDUBEMI-তে</h1>
+              <p class="hero__subtitle" data-bind="heroSubtitle">শেখার নতুন অভিজ্ঞতা, প্রতিদিন</p>
+            </div>
+          </div>
+
+          <div class="hero__slide">
+            <img src="assets/banners/admission.jpg" alt="Admission Banner" class="hero__image" />
+            <div class="hero__overlay">
+              <h1 class="hero__title" data-bind="heroTitle">ভর্তি চলছে ২০২৬</h1>
+              <p class="hero__subtitle" data-bind="heroSubtitle">এখনই আবেদন করুন</p>
+            </div>
+          </div>
+
+        </div>
+        <div class="hero__dots" data-bind="heroDots">
+          <span class="hero__dot is-active"></span>
+          <span class="hero__dot"></span>
+        </div>
+      </section>
+
+      <!-- PORTAL ACCESS CARDS -->
+      <section class="section">
+        <div class="section__header">
+          <h3 class="section__title">পোর্টালে প্রবেশ করুন</h3>
+        </div>
+        <div class="portal-grid" data-bind="portalCards">
+
+          <a class="portal-card portal-card--student" data-nav="student-portal" href="pages/student-portal.html">
+            <div class="portal-card__icon-wrap">
+              <img src="assets/icons/student.svg" alt="Student" class="portal-card__icon" />
+            </div>
+            <span class="portal-card__title">স্টুডেন্ট পোর্টাল</span>
+            <span class="portal-card__desc">উপস্থিতি, ফলাফল ও অগ্রগতি দেখুন</span>
+            <span class="portal-card__arrow">→</span>
+          </a>
+
+          <a class="portal-card portal-card--teacher" data-nav="teacher-portal" href="pages/teacher-portal.html">
+            <div class="portal-card__icon-wrap">
+              <img src="assets/icons/teacher.svg" alt="Teacher" class="portal-card__icon" />
+            </div>
+            <span class="portal-card__title">টিচার পোর্টাল</span>
+            <span class="portal-card__desc">ক্লাস পরিচালনা ও মূল্যায়ন করুন</span>
+            <span class="portal-card__arrow">→</span>
+          </a>
+
+        </div>
+      </section>
+
+      <!-- BRANCH INFO CARD -->
+      <section class="section">
+        <div class="section__header">
+          <h3 class="section__title">শাখার তথ্য</h3>
+        </div>
+        <div class="branch-card" data-bind="branchInfo">
+          <div class="branch-card__top">
+            <div class="branch-card__icon-wrap">
+              <img src="assets/icons/location.svg" alt="Branch" class="branch-card__icon" />
+            </div>
+            <div class="branch-card__info">
+              <p class="branch-card__name" data-bind="branchName">EDUBEMI — ধানমন্ডি শাখা</p>
+              <p class="branch-card__address" data-bind="branchAddress">বাড়ি ১২, রোড ৮, ধানমন্ডি, ঢাকা ১২০৯</p>
+            </div>
+          </div>
+          <div class="branch-card__meta">
+            <span class="branch-card__meta-item">
+              <img src="assets/icons/clock.svg" alt="" class="branch-card__meta-icon" />
+              <span class="branch-card__status" data-bind="branchStatus">খোলা আছে</span>
+            </span>
+            <span class="branch-card__meta-item">
+              <img src="assets/icons/phone.svg" alt="" class="branch-card__meta-icon" />
+              <span data-bind="branchPhone">০১৭xxxxxxxx</span>
+            </span>
+          </div>
+          <button class="map-btn" data-nav="open-maps" data-bind="mapButton">
+            <img src="assets/icons/map-pin.svg" alt="" class="map-btn__icon" />
+            <span>ম্যাপে দেখুন</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- RECENT NOTICES -->
+      <section class="section">
+        <div class="section__header">
+          <h3 class="section__title">সাম্প্রতিক নোটিশ</h3>
+          <a class="section__link" data-nav="all-notices">সব দেখুন</a>
+        </div>
+        <div class="notice-list" data-bind="recentNotices">
+
+          <div class="notice-item" data-bind="notice[0]" data-nav="notice-detail">
+            <span class="notice-item__dot"></span>
+            <div class="notice-item__body">
+              <span class="notice-item__title" data-bind="noticeTitle">অভিভাবক সভা — শনিবার</span>
+              <span class="notice-item__date" data-bind="noticeDate">৩০ আগস্ট, ২০২৬</span>
+            </div>
+          </div>
+
+          <div class="notice-item" data-bind="notice[1]" data-nav="notice-detail">
+            <span class="notice-item__dot"></span>
+            <div class="notice-item__body">
+              <span class="notice-item__title" data-bind="noticeTitle">অর্ধবার্ষিক পরীক্ষার রুটিন প্রকাশিত</span>
+              <span class="notice-item__date" data-bind="noticeDate">২৮ আগস্ট, ২০২৬</span>
+            </div>
+          </div>
+
+          <div class="notice-item" data-bind="notice[2]" data-nav="notice-detail">
+            <span class="notice-item__dot"></span>
+            <div class="notice-item__body">
+              <span class="notice-item__title" data-bind="noticeTitle">নতুন লাইব্রেরি বই সংযোজন</span>
+              <span class="notice-item__date" data-bind="noticeDate">২৫ আগস্ট, ২০২৬</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- FEATURES SECTION -->
+      <section class="section">
+        <div class="section__header">
+          <h3 class="section__title">কেন EDUBEMI</h3>
+        </div>
+        <div class="feature-grid" data-bind="featureList">
+
+          <div class="feature-item">
+            <div class="feature-item__icon-wrap">
+              <img src="assets/icons/chart.svg" alt="" class="feature-item__icon" />
+            </div>
+            <span class="feature-item__title">রিয়েল-টাইম অগ্রগতি</span>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-item__icon-wrap">
+              <img src="assets/icons/shield.svg" alt="" class="feature-item__icon" />
+            </div>
+            <span class="feature-item__title">নিরাপদ ডাটা</span>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-item__icon-wrap">
+              <img src="assets/icons/badge.svg" alt="" class="feature-item__icon" />
+            </div>
+            <span class="feature-item__title">গেমিফাইড লার্নিং</span>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-item__icon-wrap">
+              <img src="assets/icons/chat.svg" alt="" class="feature-item__icon" />
+            </div>
+            <span class="feature-item__title">সরাসরি যোগাযোগ</span>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <nav class="bottom-nav">
+    <a class="bottom-nav__item is-active" data-nav="home">
+      <img src="assets/icons/home.svg" alt="Home" class="bottom-nav__icon" />
+      <span class="bottom-nav__label">হোম</span>
+    </a>
+    <a class="bottom-nav__item" data-nav="courses">
+      <img src="assets/icons/book.svg" alt="Courses" class="bottom-nav__icon" />
+      <span class="bottom-nav__label">কোর্স</span>
+    </a>
+    <a class="bottom-nav__item" data-nav="student-portal">
+      <img src="assets/icons/user.svg" alt="Portal" class="bottom-nav__icon" />
+      <span class="bottom-nav__label">পোর্টাল</span>
+    </a>
+    <a class="bottom-nav__item" data-nav="messages">
+      <img src="assets/icons/chat.svg" alt="Messages" class="bottom-nav__icon" />
+      <span class="bottom-nav__label">বার্তা</span>
+    </a>
+    <a class="bottom-nav__item" data-nav="profile">
+      <img src="assets/icons/settings.svg" alt="Profile" class="bottom-nav__icon" />
+      <span class="bottom-nav__label">প্রোফাইল</span>
+    </a>
+  </nav>
+
+  <script src="js/app.js"></script>
+  <script src="js/notifications.js"></script>
+</body>
+      </html>
