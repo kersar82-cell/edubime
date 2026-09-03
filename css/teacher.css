@@ -1,0 +1,288 @@
+/* ============================================
+   EDUBEMI — TEACHER PORTAL STYLESHEET
+   css/teacher.css
+   ============================================ */
+
+/* ---------- CLASS / SECTION SELECTOR ---------- */
+.selector-row {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.select-field {
+  position: relative;
+  flex: 1;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 10px var(--space-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.select-field__label {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-bottom: 2px;
+}
+
+.select-field__control {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  padding-right: var(--space-lg);
+}
+
+.select-field__icon {
+  position: absolute;
+  right: var(--space-md);
+  bottom: 12px;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+
+/* ============================================
+   ATTENDANCE SHEET
+   ============================================ */
+.attendance-list {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.attendance-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.attendance-row:last-child {
+  border-bottom: none;
+}
+
+.attendance-row__info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.attendance-row__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.attendance-row__name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- TOGGLE SWITCH ---------- */
+.toggle-switch {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.toggle-switch__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-switch__track {
+  position: relative;
+  width: 44px;
+  height: 26px;
+  background-color: var(--color-border);
+  border-radius: var(--radius-full);
+  transition: background-color var(--transition-base);
+}
+
+.toggle-switch__thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base);
+}
+
+.toggle-switch__input:checked + .toggle-switch__track {
+  background-color: var(--color-success);
+}
+
+.toggle-switch__input:checked + .toggle-switch__track .toggle-switch__thumb {
+  transform: translateX(18px);
+}
+
+.toggle-switch__input:focus-visible + .toggle-switch__track {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   LESSON PERFORMANCE SLIDER
+   ============================================ */
+.performance-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.performance-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+
+.performance-card__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.performance-card__value {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+}
+
+.performance-card__slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(
+    to right,
+    var(--color-primary) 0%,
+    var(--color-primary) 70%,
+    var(--color-border) 70%,
+    var(--color-border) 100%
+  );
+  margin-bottom: var(--space-sm);
+}
+
+.performance-card__slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary);
+  border: 3px solid var(--color-surface);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+}
+
+.performance-card__slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary);
+  border: 3px solid var(--color-surface);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+}
+
+.performance-card__slider::-moz-range-track {
+  height: 6px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-border);
+}
+
+.performance-card__scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+/* ============================================
+   NOTES FIELD
+   ============================================ */
+.notes-field {
+  width: 100%;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  resize: vertical;
+  box-shadow: var(--shadow-sm);
+  line-height: 1.5;
+}
+
+.notes-field::placeholder {
+  color: var(--color-text-muted);
+}
+
+.notes-field:focus {
+  border-color: var(--color-primary);
+}
+
+/* ============================================
+   SUBMIT BUTTON
+   ============================================ */
+.section--submit {
+  padding-bottom: var(--space-md);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 14px var(--space-md);
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow-md);
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn-primary:active {
+  background-color: var(--color-primary-dark);
+  transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+  background-color: var(--color-text-muted);
+  box-shadow: none;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 340px) {
+  .selector-row {
+    gap: var(--space-sm);
+  }
+
+  .attendance-row__avatar {
+    width: 32px;
+    height: 32px;
+  }
+  }
