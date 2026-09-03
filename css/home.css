@@ -3,6 +3,88 @@
    css/home.css
    ============================================ */
 
+/* ---------- APP HEADER & ICONS ---------- */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm, 12px) var(--space-md, 16px);
+  background-color: var(--color-surface, #ffffff);
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs, 8px);
+}
+
+.app-header__logo {
+  height: 32px;
+  width: auto;
+  max-width: 130px;
+  object-fit: contain;
+}
+
+.app-header__title {
+  font-size: var(--font-size-md, 1.1rem);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--color-text-primary, #111827);
+}
+
+.app-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.app-header__icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-full, 50%);
+  color: var(--color-text-primary, #1f2937);
+  cursor: pointer;
+  transition: background-color var(--transition-fast, 0.2s);
+}
+
+.app-header__icon-btn:active {
+  background-color: var(--color-primary-light, #f3f4f6);
+}
+
+.app-header__icon {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+}
+
+.app-header__actions .badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: var(--radius-full, 999px);
+  background-color: var(--color-danger, #ef4444);
+  color: var(--color-text-inverse, #ffffff);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold, 700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
 /* ---------- HERO / BANNER SECTION ---------- */
 .hero {
   position: relative;
@@ -244,4 +326,5 @@
   .hero__title {
     font-size: var(--font-size-base);
   }
-  }
+   }
+             
