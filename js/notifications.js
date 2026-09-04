@@ -7,6 +7,9 @@
   'use strict';
 
   /* ---------- DEMO NOTIFICATION DATA ---------- */
+  /* ---------- DEMO NOTIFICATION DATA ---------- */
+  const assetPrefix = window.location.pathname.includes('/pages/') ? '../assets/' : 'assets/';
+
   const demoNotifications = [
     {
       id: 'ntf-001',
@@ -15,7 +18,7 @@
       message: 'আপনার সন্তানের আজকের উপস্থিতি নিশ্চিত করা হয়েছে।',
       time: '১০ মিনিট আগে',
       isRead: false,
-      icon: '../assets/icons/check-circle.svg'
+      icon: assetPrefix + 'icons/check-circle.svg'
     },
     {
       id: 'ntf-002',
@@ -24,7 +27,7 @@
       message: 'গণিত বিষয়ের সাপ্তাহিক মূল্যায়ন ফলাফল প্রকাশ করা হয়েছে।',
       time: '১ ঘণ্টা আগে',
       isRead: false,
-      icon: '../assets/icons/result.svg'
+      icon: assetPrefix + 'icons/result.svg'
     },
     {
       id: 'ntf-003',
@@ -33,7 +36,7 @@
       message: 'শ্রেণি শিক্ষক আপনাকে একটি বার্তা পাঠিয়েছেন।',
       time: '৩ ঘণ্টা আগে',
       isRead: false,
-      icon: '../assets/icons/chat.svg'
+      icon: assetPrefix + 'icons/chat.svg'
     },
     {
       id: 'ntf-004',
@@ -42,7 +45,7 @@
       message: 'আগামী শনিবার অভিভাবক সভা অনুষ্ঠিত হবে।',
       time: 'গতকাল',
       isRead: true,
-      icon: '../assets/icons/calendar.svg'
+      icon: assetPrefix + 'icons/calendar.svg'
     },
     {
       id: 'ntf-005',
@@ -51,9 +54,10 @@
       message: 'আপনার সন্তান "৭ দিন স্ট্রিক" ব্যাজ অর্জন করেছে।',
       time: '২ দিন আগে',
       isRead: true,
-      icon: '../assets/badges/streak.svg'
+      icon: assetPrefix + 'badges/streak.svg'
     }
   ];
+   
 
   /* ---------- STATE ---------- */
   let isDropdownOpen = false;
