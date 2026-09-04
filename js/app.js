@@ -7,15 +7,21 @@
   'use strict';
 
   /* ---------- ROUTE MAP ---------- */
+  /* ---------- ROUTE MAP ---------- */
   /* Maps data-nav keys to their corresponding page files. */
+  const isSubfolder = window.location.pathname.includes('/pages/');
+  const prefix = isSubfolder ? '' : 'pages/';
+  const homePath = isSubfolder ? '../index.html' : 'index.html';
+
   const routeMap = {
-    'home': '../index.html',
-    'courses': 'courses.html',
-    'student-portal': 'student-portal.html',
-    'teacher-portal': 'teacher-portal.html',
-    'messages': 'messages.html',
-    'profile': 'profile.html'
+    'home': homePath,
+    'courses': prefix + 'courses.html',
+    'student-portal': prefix + 'student-portal.html',
+    'teacher-portal': prefix + 'teacher-portal.html',
+    'messages': prefix + 'messages.html',
+    'profile': prefix + 'profile.html'
   };
+   
 
   /* ---------- CURRENT PAGE DETECTION ---------- */
   function getCurrentPageKey() {
